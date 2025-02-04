@@ -1,0 +1,3 @@
+core\io\WebRootHandlerTest.class
+http\HttpVersionTest.class
+http\HttpParserTest.class
