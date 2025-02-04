@@ -29,7 +29,6 @@ public class HttpConnectionControler extends Thread {
             InputStream input = socket.getInputStream();
             OutputStream output = socket.getOutputStream();
         ) {
-            // Use the already-implemented HttpParser to parse the request.
             HttpParser parser = new HttpParser();
             HttpRequest request;
             try {
