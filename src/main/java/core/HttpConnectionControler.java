@@ -29,38 +29,22 @@ public class HttpConnectionControler extends Thread {
             InputStream input = socket.getInputStream();
             OutputStream output = socket.getOutputStream();
         ) {
-            // Use the already-implemented HttpParser to parse the request.
             HttpParser parser = new HttpParser();
             HttpRequest request;
             try {
                 request = parser.parserHttpRequest(input);
             } catch (HttpParsingException ex) {
                 LOGGER.error("Failed to parse HTTP request", ex);
-                // Respond with a 400 Bad Request if parsing fails.
                 sendResponse(output, "400 Bad Request", "text/plain", "Bad Request".getBytes());
                 return;
             }
-
-            // Extract the requested target.
-            String target = request.getTarget(); // e.g., "/" or "/index.html"
+            
+            String target = request.getTarget();
             LOGGER.info("HTTP Request Target: {}", target);
 
-            // If the target is "/" then we map it to index.html.
-            if (target.equals("/")) {
-                target = "/index.html";
-            }
-
-            // Remove the leading "/" if needed for file resolution.
-            if (target.startsWith("/")) {
-                target = target.substring(1);
-            }
-
             try {
-                // Get the file's byte array and MIME type from WebRootHandler.
                 byte[] fileContent = webRootHandler.getFileByteArrayData(target);
                 String mimeType = webRootHandler.getFileMimeType(target);
-
-                // Send a 200 OK response with the file data.
                 sendResponse(output, "200 OK", mimeType, fileContent);
             } catch (FileNotFoundException e) {
                 LOGGER.error("File not found: {}", target);
